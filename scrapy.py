@@ -114,7 +114,8 @@ def scraping_rating(rating_url):
     plt.title("Star Ratings")
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.show()
+    plt.show(block=False)
+    plt.pause(3)
     plt.close()
 
 
@@ -170,18 +171,37 @@ def scraping_reviews(reviewing_url):
     if response.ok:
         soup = BeautifulSoup(response.content, 'html.parser')
 
+        # i am taking the a tag with the class name and will iterate through out this and i will find out many classes under this
         fiveStarReviewLink = soup.find_all('a', {'class': "a-size-base a-link-normal"})
         #print(fiveStarReviewLink)
         if fiveStarReviewLink:
+            # itterate through the html parse and i can handle everything/retrieve any data from the html 
             for hyperlinks in fiveStarReviewLink:
+                # every parameter till query string separater "?" it is same so we will search only for those hyper links 
                 if 'ref=acr_dp_hist_5?' in hyperlinks['href']:
                     #print(hyperlinks['href'])
-                    x = hyperlinks['href']
+                    fiveStar = hyperlinks['href']
+                if 'ref=acr_dp_hist_4?' in hyperlinks['href']:
+                    fourStar = hyperlinks['href']
+                if 'ref=acr_dp_hist_3?' in hyperlinks['href']:
+                    threeStar = hyperlinks['href']
+                if 'ref=acr_dp_hist_2?' in hyperlinks['href']:
+                    twoStar = hyperlinks['href']
+                if 'ref=acr_dp_hist_1?' in hyperlinks['href']:
+                    oneStar = hyperlinks['href']
                     break
-                else:
-                    print("Nothing")
-        fiveStarUrl = 'https://www.amazon.in' + x
+
+        fiveStarUrl = 'https://www.amazon.in' + fiveStar
+        fourStarUrl = 'https://www.amazon.in' + fourStar
+        threeStarUrl = 'https://www.amazon.in' + threeStar
+        twoStarUrl = 'https://www.amazon.in' + twoStar
+        oneStarUrl = 'https://www.amazon.in' + oneStar
+        
         print(fiveStarUrl)
+        print(fourStarUrl)
+        print(threeStarUrl)
+        print(twoStarUrl)
+        print(oneStarUrl)
 
 
 scraping_top_url()
