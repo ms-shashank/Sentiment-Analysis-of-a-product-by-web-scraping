@@ -44,7 +44,7 @@ def scraping_top_url():
     url = top_product_url(user_input)
     print(url)
     scraping_rating(url)
-    # scraping_reviews(url)
+    scraping_reviews(url)
 
 def scraping_rating(rating_url):
     
@@ -115,6 +115,7 @@ def scraping_rating(rating_url):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
+    plt.close()
 
 
         # Initialize a dictionary with the expected order of star ratings
@@ -150,6 +151,37 @@ def scraping_rating(rating_url):
 
 
         
-# def scraping_reviews(reviewing_url):
+def scraping_reviews(reviewing_url):
+    max_tries = 21
+    attempts = 0
+    response = None
+
+    while attempts < max_tries and not response:
+        for i in userAgents:
+            try:
+                response = requests.get(reviewing_url, headers={'User_Agent': i})
+                if response.status_code == 200:
+                    break
+            except requests.RequestException as e:
+                print(f"An error occurred: {e}")
+            time.sleep(1)
+        attempts += 1
+    
+    if response.ok:
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        fiveStarReviewLink = soup.find_all('a', {'class': "a-size-base a-link-normal"})
+        #print(fiveStarReviewLink)
+        if fiveStarReviewLink:
+            for hyperlinks in fiveStarReviewLink:
+                if 'ref=acr_dp_hist_5?' in hyperlinks['href']:
+                    #print(hyperlinks['href'])
+                    x = hyperlinks['href']
+                    break
+                else:
+                    print("Nothing")
+        fiveStarUrl = 'https://www.amazon.in' + x
+        print(fiveStarUrl)
+
 
 scraping_top_url()
