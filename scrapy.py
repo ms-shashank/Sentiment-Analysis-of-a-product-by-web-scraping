@@ -8,6 +8,7 @@ import csv
 import matplotlib.pyplot as plt
 
 userAgents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.2420.81',
@@ -72,6 +73,7 @@ def scraping_rating_and_reviews(rating_url):
             try:
                 response = requests.get(rating_url, headers={'User_Agent': i})
                 if response.status_code == 200:
+                    # print(i)
                     break
             except requests.RequestException as e:
                 print(f"An error occurred: {e}")
