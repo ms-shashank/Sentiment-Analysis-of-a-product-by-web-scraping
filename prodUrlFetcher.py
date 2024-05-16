@@ -69,4 +69,5 @@ def top_product_url(product_name):
     else:
         print('Failed to retrieve the webpage')
 
-
+if __name__ == "__main__":
+    top_product_url()

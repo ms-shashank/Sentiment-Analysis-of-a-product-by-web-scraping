@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
+# import rembg
 
 userAgents = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
@@ -40,12 +41,12 @@ threeStarRating = []
 twoStarRating = []
 oneStarRating = []
 
-def scraping_top_url():
-    user_input = input("Enter a product: ")
+def scraping_top_url(user_input):
+    # user_input = input("Enter a product: ")
     url = top_product_url(user_input)
-    print(url)
-    star, fiveStarReview, fourStarReview, threeStarReview, twoStarReview, oneStarReview = scraping_rating_and_reviews(url)
-    return star, fiveStarReview, fourStarReview, threeStarReview, twoStarReview, oneStarReview      
+    # print(url)
+    img_url ,star, fiveStarReview, fourStarReview, threeStarReview, twoStarReview, oneStarReview = scraping_rating_and_reviews(url)
+    return img_url, star, fiveStarReview, fourStarReview, threeStarReview, twoStarReview, oneStarReview      
     # scraping_reviews(url)
 
 def scraping_rating_and_reviews(rating_url):
@@ -80,6 +81,10 @@ def scraping_rating_and_reviews(rating_url):
             time.sleep(0.100)
         attempts += 1
     
+    # with requests.Session() as session
+    # with requests.Session() as session:
+    #     session.headers.update({'User-Agent': userAgents[0]})
+    #     response = session.get(rating_url)
     if response.ok:
         soup = BeautifulSoup(response.content, 'html.parser')
         
@@ -90,6 +95,12 @@ def scraping_rating_and_reviews(rating_url):
     #     print(rating)
     # else:
     #     print("Failed to retrieve the ratings after maximum retries.")
+        img = soup.find("img", id = "landingImage")
+        image_link = img['src']
+        # input_image = Image.open(image_link)
+        # output_image = remove(input_image)
+
+        #print(image_link)
 
         x = soup.find_all("td", class_ = "a-text-right a-nowrap a-nowrap")
         for td in x:
@@ -160,63 +171,30 @@ def scraping_rating_and_reviews(rating_url):
     # df = pd.DataFrame(rating, rows=["Stars"])
     # df.to_csv("Ratings_of_prod", index=False)
 
-
+#------------------------------------IMPORTANT---------------------------------
     # Convert percentages to float for graphing
-    star_percentages = [float(rates.strip('%')) for rates in rating]
+    # star_percentages = [float(rates.strip('%')) for rates in rating]
 
-    st = ['5 stars', '4 stars', '3 stars', '2 stars', '1 star']
+    # st = ['5 stars', '4 stars', '3 stars', '2 stars', '1 star']
 
-    with open('star_ratings.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['Star', 'Percentage'])
-        for star, percentage in zip(st, star_percentages):
-            writer.writerow([star, percentage])
+    # with open('star_ratings.csv', 'w', newline='') as file:
+    #     writer = csv.writer(file)
+    #     writer.writerow(['Star', 'Percentage'])
+    #     for star, percentage in zip(st, star_percentages):
+    #         writer.writerow([star, percentage])
 
-    plt.bar(st, star_percentages, color="skyblue")
-    plt.xlabel("Stars")
-    plt.ylabel("percentage")
-    plt.title("Star Ratings")
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.show(block=False)
-    plt.pause(3)
-    plt.close()
+    # plt.bar(st, star_percentages, color="skyblue")
+    # plt.xlabel("Stars")
+    # plt.ylabel("percentage")
+    # plt.title("Star Ratings")
+    # plt.xticks(rotation=45)
+    # plt.tight_layout()
+    # plt.show(block=False)
+    # plt.pause(3)
+    # plt.close()
 
-    return rating, fiveStarUrl, fourStarUrl, threeStarUrl, twoStarUrl, oneStarUrl
-
-        # Initialize a dictionary with the expected order of star ratings
-#     ratings_dict = {
-#         '5 star': None,
-#         '4 star': None,
-#         '3 star': None,
-#         '2 star': None,
-#         '1 star': None
-#     }
-
-#     x = soup.find_all("td", class_="a-text-right a-nowrap a-nowrap")
-
-#     for td in x:
-#     # Find all percentages for non-zero ratings
-#         rating_percentage = td.find_all("a", class_="a-size-base a-link-normal")
-#         for percentage in rating_percentage:
-#             stars = percentage.find_previous("td").get_text()
-#             ratings_dict[stars] = percentage.get_text()
-
-#     # Find all percentages for zero ratings
-#         zero_handling = td.find_all("span", class_="a-size-base")
-#         for zero in zero_handling:
-#             stars = zero.find_previous("td").get_text()
-#             ratings_dict[stars] = zero.get_text() if zero.get_text() else "0%"
-
-#     # print(ratings_dict)
-# # Convert the ratings dictionary to a list while maintaining the order
-#     ratings_list = [ratings_dict[key] if ratings_dict[key] is not None else "0%" for key in ratings_dict]
-#     final_ratings = ratings_list[5:]
-#     print(final_ratings)
-
-
-
-        
+    return image_link, rating, fiveStarUrl, fourStarUrl, threeStarUrl, twoStarUrl, oneStarUrl
+       
 # def scraping_reviews(reviewing_url):
 #     max_tries = 21
 #     attempts = 0
@@ -270,3 +248,6 @@ def scraping_rating_and_reviews(rating_url):
 
 
 # scraping_top_url()
+
+if __name__ == "__main__":
+    scraping_top_url()
