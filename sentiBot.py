@@ -5,19 +5,19 @@ import numpy as np
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
-# from gensim import corpora, models
-# import gensim
+from gensim import corpora, models
+import gensim
 import nltk
 import plotly.express as px
 import matplotlib.pyplot as plt
 import re
-# import pyLDAvis
-# import pyLDAvis.gensim
+import pyLDAvis
+import pyLDAvis.gensim
 import string
 from nltk.stem import PorterStemmer
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-#from collections import Counter
-#import seaborn as sns
+from collections import Counter
+import seaborn as sns
 
 def ultra_main(user_input):
     reviewlist, imageUrl, rating = main(user_input)

@@ -173,15 +173,17 @@ def scraping_rating_and_reviews(rating_url):
 
 #------------------------------------IMPORTANT---------------------------------
     # Convert percentages to float for graphing
-    # star_percentages = [float(rates.strip('%')) for rates in rating]
+    star_percentages = [float(rates.strip('%')) for rates in rating]
 
-    # st = ['5 stars', '4 stars', '3 stars', '2 stars', '1 star']
+    st = ['5 stars', '4 stars', '3 stars', '2 stars', '1 star']
 
-    # with open('star_ratings.csv', 'w', newline='') as file:
-    #     writer = csv.writer(file)
-    #     writer.writerow(['Star', 'Percentage'])
-    #     for star, percentage in zip(st, star_percentages):
-    #         writer.writerow([star, percentage])
+    with open('star_ratings.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Star', 'Percentage'])
+        for star, percentage in zip(st, star_percentages):
+            writer.writerow([star, percentage])
+
+    rating.clear()
 
     # plt.bar(st, star_percentages, color="skyblue")
     # plt.xlabel("Stars")
