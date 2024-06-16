@@ -72,7 +72,7 @@ from requests.exceptions import RequestException
 
 reviewlist = []
 def extract_reviews(response_content):
-    soup = BeautifulSoup(response_content, "html.parser")
+    soup = BeautifulSoup(response_content, "lxml")
     reviews = soup.findAll("div", {'data-hook': 'review'})
     # print(soup)
     # print(reviews)
@@ -245,4 +245,5 @@ def main(user_input):
     df = pd.DataFrame(reviewlist)
     df.to_json("reviews.json", index=False)
     df.to_csv("reviews.csv", index=False)
+    reviewlist.clear()
     return reviewlist, imageUrl, Stars
