@@ -274,7 +274,7 @@ def url_sessions(urls, userAgents):
                     finally:
                         if attempts < max_tries - 1:
                             session.headers.update({'User-Agent': userAgents[attempts % len(userAgents)]})
-                        time.sleep(1)
+                        time.sleep(3)
                     attempts += 1
                 try:
                     if response is None or 'a-disabled a-last' in next_page.get('class', []):
