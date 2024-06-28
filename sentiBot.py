@@ -18,6 +18,8 @@ from nltk.stem import PorterStemmer
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 # from collections import Counter
 import seaborn as sns
+from wordcloud import WordCloud
+from io import BytesIO
 
 def ultra_main(user_input):
     reviewlist, imageUrl, rating = main(user_input)
@@ -100,7 +102,48 @@ def ultra_main(user_input):
     # print(train['sentiment'].head(10))
     # print(train['sentiment'].value_counts())
     
-    return train['sentiment'], imageUrl, rating
+    wordcloud = WordCloud(height=500, width=500, stopwords = set(stopwords.words('english')), background_color='white')
+    # wordcloud_positive = wordcloud.generate(' '.join(train.loc[train['sentiment'] == "Positive", "cleaned"].tolist()))
+    # wordcloud_negative = wordcloud.generate(" ".join(train.loc[train['sentiment'] == "Negative", "cleaned"].tolist()))
+    # wordcloud_nutral = wordcloud.generate(" ".join(train.loc[train['sentiment'] == "Neutral", "cleaned"].tolist()))
+    # positive_text = ' '.join(train.loc[train['sentiment'] == "Positive", "cleaned"].tolist())
+    # wordcloud_positive = wordcloud.generate(positive_text)
+    # wordcloud_positive.to_file("wordcloud_positive.png")
+
+    # # Generate and save negative word cloud
+    # negative_text = ' '.join(train.loc[train['sentiment'] == "Negative", "cleaned"].tolist())
+    # wordcloud_negative = wordcloud.generate(negative_text)
+    # wordcloud_negative.to_file("wordcloud_negative.png")
+
+    # # Generate and save neutral word cloud
+    # neutral_text = ' '.join(train.loc[train['sentiment'] == "Neutral", "cleaned"].tolist())
+    # wordcloud_neutral = wordcloud.generate(neutral_text)
+    # wordcloud_neutral.to_file("wordcloud_neutral.png")
+
+    # return train['sentiment'], imageUrl, rating, wordcloud_positive, wordcloud_negative, wordcloud_neutral
+    positive_text = ' '.join(train.loc[train['sentiment'] == "Positive", "cleaned"].tolist())
+    wordcloud_positive = wordcloud.generate(positive_text)
+    pos_img = BytesIO()
+    wordcloud_positive.to_image().save(pos_img, format='PNG')
+    pos_img.seek(0)
+
+    # Generate and save negative word cloud
+    negative_text = ' '.join(train.loc[train['sentiment'] == "Negative", "cleaned"].tolist())
+    wordcloud_negative = wordcloud.generate(negative_text)
+    neg_img = BytesIO()
+    wordcloud_negative.to_image().save(neg_img, format='PNG')
+    neg_img.seek(0)
+
+    # Generate and save neutral word cloud
+    neutral_text = ' '.join(train.loc[train['sentiment'] == "Neutral", "cleaned"].tolist())
+    wordcloud_neutral = wordcloud.generate(neutral_text)
+    neu_img = BytesIO()
+    wordcloud_neutral.to_image().save(neu_img, format='PNG')
+    neu_img.seek(0)
+
+    return train['sentiment'], imageUrl, rating, pos_img, neg_img, neu_img
+    
+    # return train['sentiment'], imageUrl, rating, wordcloud_positive, wordcloud_negative, wordcloud_nutral    
 
     sns.countplot(train['sentiment']).set_title("Distribution of Sentiment")
     plt.show()
