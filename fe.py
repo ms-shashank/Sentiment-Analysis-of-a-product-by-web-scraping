@@ -25,8 +25,8 @@ def clear_data():
 
 
 def run_script(user_input):
-    trained_data, imageUrl, ratings, wordcloud_pos, wordcloud_neg, wordcloud_neu = ultra_main(user_input)
-    return trained_data, imageUrl, ratings, wordcloud_pos, wordcloud_neg, wordcloud_neu 
+    trained_data, imageUrl, ratings, figs = ultra_main(user_input)
+    return trained_data, imageUrl, ratings, figs 
 
 
 form = st.form(key="input_form", clear_on_submit=True)
@@ -38,9 +38,12 @@ if submit:
         st.warning("Please enter an item/product to search", icon="⚠️")
     else:
         clear_data()
-        sentiData, imageUrl, Ratings, wordcloud_pos, wordcloud_neg, wordcloud_neu = run_script(text)
+        sentiData, imageUrl, Ratings, figs = run_script(text)
         st.image(imageUrl)
         
+        st.divider()
+        
+        st.subheader("Sentiment Analysis")
         df = pd.read_csv("star_ratings.csv")
         fig = px.bar(df, x="Star", y="Percentage", title="Star Ratings Distribution")
         st.plotly_chart(fig, use_container_width=True)
@@ -50,16 +53,25 @@ if submit:
         figure = px.bar(sentiment_counts, x="Sentiment", y="Count", title="Sentiment Distribution")
         st.plotly_chart(figure, use_container_width=True)
         
-        col1, col2, col3 = st.columns(3)
+        st.divider()
         
+        st.subheader("Word Clouds")
+        col1, col2, col3 = st.columns(3)
         with col1:
-            st.image(wordcloud_pos, caption='Positive Word Cloud', width=300)
+            st.pyplot(figs[0])
         with col2:
-            st.image(wordcloud_neg, caption='Negative Word Cloud', width=300)
+            st.pyplot(figs[1])
         with col3:
-            st.image(wordcloud_neu, caption='Neutral Word Cloud', width=300)
+            st.pyplot(figs[2])
+            
             
 #------------------------------------------------------------------------------------------------------------------------------------------------------            
+        # with col1:
+        #     st.image(wordcloud_pos, caption='Positive Word Cloud', width=300)
+        # with col2:
+        #     st.image(wordcloud_neg, caption='Negative Word Cloud', width=300)
+        # with col3:
+        #     st.image(wordcloud_neu, caption='Neutral Word Cloud', width=300)
             
 # from sentiBot import ultra_main
 # import streamlit as st
