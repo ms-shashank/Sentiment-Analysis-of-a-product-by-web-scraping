@@ -33,6 +33,21 @@ userAgents = [
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393'
         ]
 
+headers = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8", 
+    "Accept-Encoding": "gzip, deflate, br, zstd", 
+    "Accept-Language": "en-US,en;q=0.5", 
+    "Priority": "u=1", 
+    "Sec-Fetch-Dest": "document", 
+    "Sec-Fetch-Mode": "navigate", 
+    "Sec-Fetch-Site": "cross-site", 
+    "Sec-Fetch-User": "?1", 
+    "Sec-Gpc": "1", 
+    "Upgrade-Insecure-Requests": "1", 
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0", 
+    "X-Amzn-Trace-Id": "Root=1-667c53fe-22aa4a273644bb2924a2fea4"
+  } 
+
 rating = []
 reviews = []
 fiveStarRating = []
@@ -60,19 +75,11 @@ def scraping_rating_and_reviews(rating_url):
     threeStarUrl = 0
     twoStarUrl = 0
     oneStarUrl = 0
-    # while True:
-    #     for i in userAgents:
-    #         response = requests.get(rating_url, headers={'User-Agent': i})
-    #         if response.status_code == 200:
-    #             break
-    #     if response.ok:
-    #         break
-    #     else:
-    #         continue
+
     while attempts < max_tries and not response:
         for i in userAgents:
             try:
-                response = requests.get(rating_url, headers={'User_Agent': i})
+                response = requests.get(rating_url, headers)
                 if response.status_code == 200:
                     # print(i)
                     break
@@ -166,11 +173,6 @@ def scraping_rating_and_reviews(rating_url):
     else:
         print("Response not recivied/Satisifyed")
 
-
-    # To Convert the [5, 4, 3, 2, 1] to []
-    # df = pd.DataFrame(rating, rows=["Stars"])
-    # df.to_csv("Ratings_of_prod", index=False)
-
 #------------------------------------IMPORTANT---------------------------------
     # Convert percentages to float for graphing
     star_percentages = [float(rates.strip('%')) for rates in rating]
@@ -195,61 +197,7 @@ def scraping_rating_and_reviews(rating_url):
     # plt.pause(3)
     # plt.close()
 
-    return image_link, rating, fiveStarUrl, fourStarUrl, threeStarUrl, twoStarUrl, oneStarUrl
-       
-# def scraping_reviews(reviewing_url):
-#     max_tries = 21
-#     attempts = 0
-#     response = None
-
-#     while attempts < max_tries and not response:
-#         for i in userAgents:
-#             try:
-#                 response = requests.get(reviewing_url, headers={'User_Agent': i})
-#                 if response.status_code == 200:
-#                     break
-#             except requests.RequestException as e:
-#                 print(f"An error occurred: {e}")
-#             time.sleep(1)
-#         attempts += 1
-    
-#     if response.ok:
-#         soup = BeautifulSoup(response.content, 'html.parser')
-
-#         # i am taking the a tag with the class name and will iterate through out this and i will find out many classes under this
-#         fiveStarReviewLink = soup.find_all('a', {'class': "a-size-base a-link-normal"})
-#         #print(fiveStarReviewLink)
-#         if fiveStarReviewLink:
-#             # itterate through the html parse and i can handle everything/retrieve any data from the html 
-#             for hyperlinks in fiveStarReviewLink:
-#                 # every parameter till query string separater "?" it is same so we will search only for those hyper links 
-#                 if 'ref=acr_dp_hist_5?' in hyperlinks['href']:
-#                     #print(hyperlinks['href'])
-#                     fiveStar = hyperlinks['href']
-#                 if 'ref=acr_dp_hist_4?' in hyperlinks['href']:
-#                     fourStar = hyperlinks['href']
-#                 if 'ref=acr_dp_hist_3?' in hyperlinks['href']:
-#                     threeStar = hyperlinks['href']
-#                 if 'ref=acr_dp_hist_2?' in hyperlinks['href']:
-#                     twoStar = hyperlinks['href']
-#                 if 'ref=acr_dp_hist_1?' in hyperlinks['href']:
-#                     oneStar = hyperlinks['href']
-#                     break
-
-#         fiveStarUrl = 'https://www.amazon.in' + fiveStar
-#         fourStarUrl = 'https://www.amazon.in' + fourStar
-#         threeStarUrl = 'https://www.amazon.in' + threeStar
-#         twoStarUrl = 'https://www.amazon.in' + twoStar
-#         oneStarUrl = 'https://www.amazon.in' + oneStar
-        
-#         print(fiveStarUrl)
-#         print(fourStarUrl)
-#         print(threeStarUrl)
-#         print(twoStarUrl)
-#         print(oneStarUrl)
-
-
-# scraping_top_url()
+    return image_link, rating, fiveStarUrl, fourStarUrl, threeStarUrl, twoStarUrl, oneStarUrl      
 
 if __name__ == "__main__":
     scraping_top_url()
