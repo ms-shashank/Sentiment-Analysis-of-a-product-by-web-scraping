@@ -18,6 +18,8 @@ from nltk.stem import PorterStemmer
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 # from collections import Counter
 import seaborn as sns
+from wordcloud import WordCloud
+from io import BytesIO
 
 def ultra_main(user_input):
     reviewlist, imageUrl, rating = main(user_input)
@@ -100,7 +102,61 @@ def ultra_main(user_input):
     # print(train['sentiment'].head(10))
     # print(train['sentiment'].value_counts())
     
-    return train['sentiment'], imageUrl, rating
+    wordcloud = WordCloud(stopwords = set(stopwords.words('english')), background_color='white', min_font_size= 10, max_words=20)
+
+    # positive_text = ' '.join(train.loc[train['sentiment'] == "Positive", "cleaned"].tolist())
+    # wordcloud_positive = wordcloud.generate(positive_text)
+    # pos_img = BytesIO()
+    # wordcloud_positive.to_image().save(pos_img, format='PNG')
+    # pos_img.seek(0)
+
+    # # Generate and save negative word cloud
+    # negative_text = ' '.join(train.loc[train['sentiment'] == "Negative", "cleaned"].tolist())
+    # wordcloud_negative = wordcloud.generate(negative_text)
+    # neg_img = BytesIO()
+    # wordcloud_negative.to_image().save(neg_img, format='PNG')
+    # neg_img.seek(0)
+
+    # # Generate and save neutral word cloud
+    # neutral_text = ' '.join(train.loc[train['sentiment'] == "Neutral", "cleaned"].tolist())
+    # wordcloud_neutral = wordcloud.generate(neutral_text)
+    # neu_img = BytesIO()
+    # wordcloud_neutral.to_image().save(neu_img, format='PNG')
+    # neu_img.seek(0)
+    figs = []
+    
+    wordcloud = wordcloud.generate(' '.join(train.loc[train['sentiment']=='Positive','cleaned'].tolist()))
+    fig, ax = plt.subplots(figsize=(15, 15))
+    ax.set_facecolor('black')
+    plt.imshow(wordcloud)
+    plt.title("Positive words", fontsize=55, color = "black", pad=40)
+    plt.axis('off')
+    plt.show()
+    figs.append(fig)
+    
+    wordcloud_neg = wordcloud.generate(' '.join(train.loc[train['sentiment']=='Negative','cleaned'].tolist()))
+    figOne, ax = plt.subplots(figsize=(15, 15))
+    ax.set_facecolor('black')
+    plt.imshow(wordcloud_neg)
+    plt.title("Negative words", fontsize=55, color = "black", pad=40)
+    plt.axis('off')
+    plt.show()
+    figs.append(figOne)
+    
+    
+    wordcloud_neu = wordcloud.generate(' '.join(train.loc[train['sentiment']=='Neutral','cleaned'].tolist()))
+    figTwo, ax = plt.subplots(figsize=(15, 15))
+    ax.set_facecolor('black')
+    plt.imshow(wordcloud_neu)
+    plt.title("Neutral words", fontsize=60, color = "black", pad=40)
+    plt.axis('off')
+    plt.show()
+    figs.append(figTwo)
+
+    return train['sentiment'], imageUrl, rating, figs 
+    # return train['sentiment'], imageUrl, rating, pos_img, neg_img, neu_img
+    
+    # return train['sentiment'], imageUrl, rating, wordcloud_positive, wordcloud_negative, wordcloud_nutral    
 
     sns.countplot(train['sentiment']).set_title("Distribution of Sentiment")
     plt.show()

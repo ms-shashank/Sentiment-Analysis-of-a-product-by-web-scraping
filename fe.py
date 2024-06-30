@@ -1,10 +1,10 @@
 from sentiBot import ultra_main
 import streamlit as st
 import seaborn as sns
-import matplotlib.pyplot as plt
 import pandas as pd
 import os
 import plotly.express as px
+import time
 
 st.set_page_config(
     page_title="Sentiment Analysis",
@@ -26,35 +26,64 @@ def clear_data():
 
 
 def run_script(user_input):
-    trained_data, imageUrl, ratings = ultra_main(user_input)
-    #print(trained_data.value_counts())
-    #print(imageUrl)
-    #print(ratings)
-    return trained_data, imageUrl, ratings
+    trained_data, imageUrl, ratings, figs = ultra_main(user_input)
+    return trained_data, imageUrl, ratings, figs 
+
 
 form = st.form(key="input_form", clear_on_submit=True)
-text = form.text_input("Enter an product name: ")
+text = form.text_input("Enter a product name: ")
 submit = form.form_submit_button(label="Search")
 
 if submit:
     if not text:
         st.warning("Please enter an item/product to search", icon="⚠️")
-    else:
+    
+    with st.spinner(f"Searching for reviews for **{text}**..."):
+        # time.sleep(5)
         clear_data()
-        sentiData, imageUrl, Ratings = run_script(text)
-        # fig = sns.countplot(sentiData).set_title("Distribution of Sentiment")
+    # sentiData, imageUrl, Ratings, figs = run_script(text)
+    # with st.status("Searching for data..."):
+    #     st.write("Finding the URL.")
+    #     time.sleep(2)
+    #     st.write("Fetching the data...")
+    #     time.sleep(10)
+        # sentiData, imageUrl, Ratings, figs = run_script(text)
+        sentiData, imageUrl, Ratings, figs = run_script(text)
+    
+    # st.write("Search completed.")
+    col1, col2 = st.columns(2)
+    with col1:
         st.image(imageUrl)
-        df = pd.read_csv("star_ratings.csv")
-        fig = px.bar(df, x = "Star", y = "Percentage", title="Star Ratings Distribution")
-        st.plotly_chart(fig, use_container_width=True)
-        sentiment_counts = sentiData.value_counts().reset_index()
-        sentiment_counts.columns = ['Sentiment', 'Count']
-        figure = px.bar(sentiment_counts, x="Sentiment", y = "Count", title="Sentiment Distribution")
-        st.plotly_chart(figure, use_container_width=True)
-        # fig, ax = plt.subplots(figsize=(8, 6))
-        # sns.countplot(x=sentiData, ax=ax)
-        # ax.set_title("Distribution of Sentiment")
-        # # st.write(Ratings)
-        # st.plotly_chart(fig, use_container_width=True)
-        
-# run_script()
+    with col2:
+        df = pd.read_csv('reviews.csv', sep = ",")
+        # train = len(df)
+        st.write( )
+        st.write()
+        st.write(f'# <span class=big-font>Found `{len(df)}` reviews</span>', unsafe_allow_html = True)
+             
+    st.divider()
+    
+    st.header("Sentiment Analysis")
+    df = pd.read_csv("star_ratings.csv")
+    fig = px.bar(df, x="Star", y="Percentage", title="Star Ratings Distribution")
+    st.plotly_chart(fig, use_container_width=True)
+    
+    sentiment_counts = sentiData.value_counts().reset_index()
+    sentiment_counts.columns = ['Sentiment', 'Count']
+    figure = px.bar(sentiment_counts, x="Sentiment", y="Count", title="Sentiment Distribution")
+    st.plotly_chart(figure, use_container_width=True)
+    
+    st.divider()
+    
+    st.header("Word Clouds")
+    col3, col4, col5 = st.columns(3)
+    with col3:
+        st.pyplot(figs[0])
+    with col4:
+        st.pyplot(figs[1])
+    with col5:
+        st.pyplot(figs[2])
+            
+            
+
+
