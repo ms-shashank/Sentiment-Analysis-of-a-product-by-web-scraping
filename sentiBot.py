@@ -21,13 +21,13 @@ import seaborn as sns
 from wordcloud import WordCloud
 from io import BytesIO
 
-def ultra_main(user_input):
-    reviewlist, imageUrl, rating = main(user_input)
+def ultra_main(user_input, session_id):
+    reviewlist, imageUrl, rating = main(user_input, session_id)
     print(imageUrl)
     print(rating)
     # print(call)
 
-    df = pd.read_csv("reviews.csv", sep = ",")
+    df = pd.read_csv(f"reviews_{session_id}.csv", sep = ",")
     train = df
 
     def clean_text(text):

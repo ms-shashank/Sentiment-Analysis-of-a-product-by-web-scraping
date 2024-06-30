@@ -6,9 +6,9 @@ import csv
 import pandas as pd
 from requests.exceptions import RequestException
 
-reviewlist = []
+# reviewlist = []
 
-def extract_reviews(response_content):
+def extract_reviews(response_content, reviewlist):
     soup = BeautifulSoup(response_content, "html.parser")
     reviews = soup.findAll("div", {"data-hook": "review"})
     for items in reviews:
@@ -22,7 +22,7 @@ def extract_reviews(response_content):
         except Exception as e:
             print(e)
 
-def url_sessions(urls, userAgents):
+def url_sessions(urls, userAgents, reviewlist):
  
     headers = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8", 
@@ -55,7 +55,7 @@ def url_sessions(urls, userAgents):
                         response = session.get(modified_url)
                         if response.status_code == 200:
                             print(f"Successfully fetched data from {modified_url}")
-                            extract_reviews(response.content)
+                            extract_reviews(response.content, reviewlist)
                             soup = BeautifulSoup(response.content, "html.parser")
                             next_page = soup.find('li', class_= 'a-last')
                             if next_page and 'a-disabled a-last' not in next_page['class']:
@@ -78,9 +78,9 @@ def url_sessions(urls, userAgents):
                 except AttributeError:
                     break
 
-def main(user_input):
-    imageUrl, Stars, fiveStarReviewUrl, fourStarReviewUrl, threeStarReviewUrl, twoStarReviewUrl, oneStarReviewUrl = scraping_top_url(user_input)
-
+def main(user_input, session_id):
+    imageUrl, Stars, fiveStarReviewUrl, fourStarReviewUrl, threeStarReviewUrl, twoStarReviewUrl, oneStarReviewUrl = scraping_top_url(user_input, session_id)
+    reviewlist = []
     urls = []
     if fiveStarReviewUrl:
         fiveStarReviewUrl = fiveStarReviewUrl.replace("#reviews-filter-bar", "")
@@ -122,16 +122,17 @@ def main(user_input):
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393'
     ]
 
-    url_sessions(urls, userAgents)
+    url_sessions(urls, userAgents, reviewlist)
     df = pd.DataFrame(reviewlist)
-    df.to_json("reviews.json", index=False)
-    df.to_csv("reviews.csv", index=False)
+    df.to_json(f"reviews_{session_id}.json", index=False)
+    df.to_csv(f"reviews_{session_id}.csv", index=False)
     reviewlist.clear()
     return reviewlist, imageUrl, Stars
 
 if __name__ == "__main__":
     x = input("Product: ")
-    main(x)
+    session_id = input("Session ID: ")
+    main(x, session_id)
     
     
     

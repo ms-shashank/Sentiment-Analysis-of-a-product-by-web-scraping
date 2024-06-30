@@ -56,15 +56,15 @@ threeStarRating = []
 twoStarRating = []
 oneStarRating = []
 
-def scraping_top_url(user_input):
+def scraping_top_url(user_input, session_id):
     # user_input = input("Enter a product: ")
     url = top_product_url(user_input)
     # print(url)
-    img_url ,star, fiveStarReview, fourStarReview, threeStarReview, twoStarReview, oneStarReview = scraping_rating_and_reviews(url)
+    img_url ,star, fiveStarReview, fourStarReview, threeStarReview, twoStarReview, oneStarReview = scraping_rating_and_reviews(url, session_id)
     return img_url, star, fiveStarReview, fourStarReview, threeStarReview, twoStarReview, oneStarReview      
     # scraping_reviews(url)
 
-def scraping_rating_and_reviews(rating_url):
+def scraping_rating_and_reviews(rating_url, session_id):
     
     max_tries = 21
     attempts = 0
@@ -179,7 +179,7 @@ def scraping_rating_and_reviews(rating_url):
 
     st = ['5 stars', '4 stars', '3 stars', '2 stars', '1 star']
 
-    with open('star_ratings.csv', 'w', newline='') as file:
+    with open(f'star_ratings_{session_id}.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Star', 'Percentage'])
         for star, percentage in zip(st, star_percentages):
