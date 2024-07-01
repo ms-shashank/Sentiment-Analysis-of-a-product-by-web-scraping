@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="auto",
 )
 
-st.title(":blue[Sentiment Analysis of a Product]")
+st.title(":blue[Sentiment Analysis of a Product]", anchor=False)
 st.divider()
 
 # Initialize session state variables
@@ -45,9 +45,16 @@ def run_script(user_input):
     trained_data, imageUrl, ratings, figs = ultra_main(user_input, session_id)
     return trained_data, imageUrl, ratings, figs 
 
+def clear_session_state():
+    st.session_state.sentiData = None
+    st.session_state.imageUrl = None
+    st.session_state.Ratings = None
+    st.session_state.figs = None
+    
 form = st.form(key="input_form", clear_on_submit=True)
 text = form.text_input("Enter a product name: ")
 submit = form.form_submit_button(label="Search")
+
 
 if submit:
     if not text:
@@ -55,8 +62,12 @@ if submit:
     else:
         with st.spinner(f"Searching for reviews for **{text}**..."):
             # clear_data()
-            st.session_state['sentiData'], st.session_state['imageUrl'], st.session_state['Ratings'], st.session_state['figs'] = run_script(text)
-
+            try:
+                clear_session_state()
+                st.session_state['sentiData'], st.session_state['imageUrl'], st.session_state['Ratings'], st.session_state['figs'] = run_script(text)
+            except Exception as e:
+                st.error(f"An error occured {e}")
+                
 if st.session_state['sentiData'] is not None:
     col1, col2 = st.columns(2)
     with col1:

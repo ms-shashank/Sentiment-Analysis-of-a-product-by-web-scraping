@@ -49,12 +49,8 @@ headers = {
   } 
 
 rating = []
-reviews = []
-fiveStarRating = []
-fourStarRating = []
-threeStarRating = []
-twoStarRating = []
-oneStarRating = []
+
+
 
 def scraping_top_url(user_input, session_id):
     # user_input = input("Enter a product: ")
@@ -102,11 +98,23 @@ def scraping_rating_and_reviews(rating_url, session_id):
     #     print(rating)
     # else:
     #     print("Failed to retrieve the ratings after maximum retries.")
-        img = soup.find("img", id = "landingImage")
-        image_link = img['src']
+        # img = soup.find("img", id = "landingImage")
+        # image_link = img['src']
         # input_image = Image.open(image_link)
         # output_image = remove(input_image)
+        try:
+            img = soup.find("img", id="landingImage") or \
+                soup.find("img", class_="a-dynamic-image a-stretch-horizontal") or \
+                soup.find("img", {"data-old-hires": True}) or \
+                soup.find("img", src=True)
 
+            if img:
+                image_link = img['src']
+            else:
+                image_link = None
+                print("Failed to find the product image.")
+        except TypeError as e:
+            print("Image Url is not found")
         #print(image_link)
 
         x = soup.find_all("td", class_ = "a-text-right a-nowrap a-nowrap")
