@@ -108,4 +108,4 @@ if st.session_state['sentiData'] is not None:
     with col5:
         st.pyplot(st.session_state['figs'][2])
 
-    delete_csv_files()        
+    # delete_csv_files()        
