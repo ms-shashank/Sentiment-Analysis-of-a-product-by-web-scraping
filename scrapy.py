@@ -92,7 +92,8 @@ def scraping_rating_and_reviews(rating_url, session_id):
     star_percentages = [float(rates.strip('%')) for rates in rating]
     st = ['5 stars', '4 stars', '3 stars', '2 stars', '1 star']
 
-    with open(f'star_ratings_{session_id}.csv', 'w', newline='') as file:
+    ratings_file_path = f'star_ratings_{session_id}.csv'
+    with open(ratings_file_path, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Star', 'Percentage'])
         for star, percentage in zip(st, star_percentages):
