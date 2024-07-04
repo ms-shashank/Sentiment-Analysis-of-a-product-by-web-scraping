@@ -29,19 +29,7 @@ def ultra_main(user_input, session_id):
 
     df = pd.read_csv(f"reviews_{session_id}.csv", sep = ",")
     train = df
-
-    def clean_text(text):
-        ps = PorterStemmer() # The PorterStemmer object from the nltk library. This object will be used to perform stemming, which reduces words to their root form
-        text1 = re.sub(r"https?:\/\/.*[\r\n]*", "", text) # to remove the urls from the data
-        text_cleaned = " ".join([x for x in text1 if x not in string.punctuation]) # removes the punctuation
-        text_cleaned = text_cleaned.lower() # converted to lowercase (for uniformity as the case letters are not usually important in text processing)
-        text_cleaned = text_cleaned.split(" ") # Splited by spaces (tokens)
-        text_tokens = [token for token in text_cleaned if token not in stopwords] #removes stopwords from text_cleaned(like is, the, and , etc..)
-        stem_words = [ps.stem(stem) for stem in text_tokens] # Each token is stemmed (reduces words to their base forms)
-        text = " ".join(stem_words)
-        text_cleaned = re.sub(' +', ' ', text) # replaces consective spaces with single spaces
-        return text_cleaned
-
+ 
     train['cleaned'] = train['Review Body'].apply(lambda x: re.sub("\n+", " ", str(x)) if pd.notnull(x) else x)
     # print(train['cleaned'].head())
 
