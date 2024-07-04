@@ -51,10 +51,19 @@ def clear_session_state():
     st.session_state.Ratings = None
     st.session_state.figs = None
     
+def delete_csv_files():
+    session_id = st.session_state.session_id
+    review_filename = f"reviews_{session_id}.csv"
+    rating_filename = f"star_ratings_{session_id}.csv"
+    
+    if os.path.exists(review_filename):
+        os.remove(review_filename)
+    if os.path.exists(rating_filename):
+        os.remove(rating_filename)
+    
 form = st.form(key="input_form", clear_on_submit=True)
 text = form.text_input("Enter a product name: ")
 submit = form.form_submit_button(label="Search")
-
 
 if submit:
     if not text:
@@ -99,4 +108,4 @@ if st.session_state['sentiData'] is not None:
     with col5:
         st.pyplot(st.session_state['figs'][2])
 
-            
+    delete_csv_files()        
