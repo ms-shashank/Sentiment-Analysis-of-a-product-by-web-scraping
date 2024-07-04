@@ -1,14 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 import random
-from urllib.parse import urljoin
 
 def top_product_url(product_name):
-    base_url = f'https://www.amazon.in'
-    relative_url = f'/s?k={product_name.replace(" ", "+")}'
-    url = urljoin(base_url, relative_url)
-    print(url)
-    
+    url = f'https://www.amazon.in/s?k={product_name.replace(" ", "+")}'
+
     userAgents = [
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
