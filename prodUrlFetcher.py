@@ -42,6 +42,7 @@ def top_product_url(product_name):
             product_link = soup.find('a', {'class': 'a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal'})
             if product_link:
                 top_product_url = 'https://www.amazon.in' + product_link['href']
+                # print(top_product_url)
                 return top_product_url
             else:
                 print("No product found in search results.")
