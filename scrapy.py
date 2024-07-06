@@ -32,10 +32,34 @@ userAgents = [
 #     "Upgrade-Insecure-Requests": "1", 
 #     "X-Amzn-Trace-Id": "Root=1-667c53fe-22aa4a273644bb2924a2fea4"
 # }
-headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
- 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
- 'Accept-Language': 'en-US,en;q=0.9',
- 'Accept-Encoding': 'gzip, deflate, br'}
+
+
+headers_list = [
+    {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br'
+    }, 
+    {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br, zstd'
+    }, 
+    {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br, zstd'
+    },
+    {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br, zstd'
+    }
+]
 
 rating = []
 
@@ -52,9 +76,14 @@ def scraping_rating_and_reviews(rating_url, session_id):
     for _ in range(retries):
         #headers = headers_template.copy()
         #headers["User-Agent"] = random.choice(userAgents)
-        response = requests.get(rating_url, headers=headers)
-        if response.status_code == 200:
-            break
+        headers = random.choice(headers_list)
+        try:
+            response = requests.get(rating_url, headers=headers)
+            if response.status_code == 200:
+                break
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+        time.sleep(random.uniform(1, 4))
 
     if response and response.ok:
         soup = BeautifulSoup(response.content, "html.parser")

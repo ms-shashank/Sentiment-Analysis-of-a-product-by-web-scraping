@@ -25,9 +25,9 @@ def extract_reviews(response_content, reviewlist):
 def url_sessions(urls, userAgents, reviewlist):
  
     headers = {
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8", 
-    "Accept-Encoding": "gzip, deflate, br, zstd", 
-    "Accept-Language": "en-US,en;q=0.5", 
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
+    "Accept-Encoding": "gzip, deflate, br", 
+    "Accept-Language": "en-US,en;q=0.9", 
     "Priority": "u=1", 
     "Sec-Fetch-Dest": "document", 
     "Sec-Fetch-Mode": "navigate", 
@@ -35,7 +35,7 @@ def url_sessions(urls, userAgents, reviewlist):
     "Sec-Fetch-User": "?1", 
     "Sec-Gpc": "1", 
     "Upgrade-Insecure-Requests": "1", 
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0", 
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36", 
     "X-Amzn-Trace-Id": "Root=1-667c53fe-22aa4a273644bb2924a2fea4"
   } 
 
